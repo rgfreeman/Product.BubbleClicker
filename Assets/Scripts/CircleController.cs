@@ -37,13 +37,14 @@ public class CircleController : MonoBehaviour {
 		    int   cmp_textureIndex;      //index texture in array of textures
 			float spriteCollisionRadius;
 
+			////analog of mipmap
 			cmp_textureIndex = 0; cmp_sprite_pixelSize=32; spriteCollisionRadius=0.16f;
 			if(cmp_target_pixelSize>32) {cmp_textureIndex=1; cmp_sprite_pixelSize=64;  spriteCollisionRadius=0.32f;}
 			if(cmp_target_pixelSize>64) {cmp_textureIndex=2; cmp_sprite_pixelSize=128; spriteCollisionRadius=0.64f;}
 			if(cmp_target_pixelSize>128){cmp_textureIndex=3; cmp_sprite_pixelSize=256; spriteCollisionRadius=1.28f;}
 			
 			GetComponent<SpriteRenderer>().sprite = 
-				ext_assetManager.GetComponent<AssetManager>().cmp_sprites[cmp_textureIndex];
+			ext_assetManager.GetComponent<AssetManager>().getNewSprite(cmp_textureIndex);
 
 			////scale to score - using formula of Line by two points
 			cmp_score = Mathf.RoundToInt(((scale - opt_minScale)/(opt_maxScale - opt_minScale)*(opt_minScore - opt_maxScore))) + opt_maxScore;

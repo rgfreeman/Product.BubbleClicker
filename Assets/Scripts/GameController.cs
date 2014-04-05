@@ -10,37 +10,47 @@ public class GameController : MonoBehaviour {
 		public float opt_genIntervalDecSteep  = 0.002f;
 
 	////state
-		private int   st_score            = 0;
-		private int   st_ticks            = 0;
+		private int   st_score             = 0;
+		private int   st_ticks             = 0;
+		private int   st_level             = 0;
 		private int   st_ticksToNextLevel;
 		private float st_timer;
 		
 		////link to external
 		public GameObject ext_circles;
-		public GameObject ext_score;
-		public GameObject ext_time;
+		public GameObject ext_guiScore;
+		public GameObject ext_guiTime;
+		public GameObject ext_assetManager;
+
 
 	////methods
 		void Start () {
 			st_timer = opt_timeInTick; //reset timer
 			st_ticksToNextLevel = opt_ticksInLevel;	//reset level ticks
-			ext_score.GetComponent<GUIText>().text = "Score:0";
-			ext_time.GetComponent<GUIText>().text  = "Time:0";
+			ext_guiScore.GetComponent<GUIText>().text = "Score:0";
+			ext_guiTime.GetComponent<GUIText>().text  = "Time:0";
 
 			////enable spawn circles
 			ext_circles.GetComponent<CirclesController>().opt_active = true;
 		}
-	
+
+		public int getLevel(){
+			return st_level;
+		}
+
 		public void incScore(int score){
 			st_score+=score;
-			ext_score.GetComponent<GUIText>().text = "Score:" + st_score.ToString();
+			ext_guiScore.GetComponent<GUIText>().text = "Score:" + st_score.ToString();
 		}
 
 		public void incTicks(int tickCount){
 			st_ticks+=tickCount;
-			ext_time.GetComponent<GUIText>().text = "Time:" + st_ticks.ToString();
+			ext_guiTime.GetComponent<GUIText>().text = "Time:" + st_ticks.ToString();
 
+			////it's time to level up?
 			if((st_ticksToNextLevel-=tickCount)<=0){
+				////update textures
+				ext_assetManager.GetComponent<AssetManager>().updateTextures();
 				st_ticksToNextLevel = opt_ticksInLevel;
 			}
 
@@ -50,7 +60,7 @@ public class GameController : MonoBehaviour {
 			////decrease spawn interval for circles
 			ext_circles.GetComponent<CirclesController>().opt_genInterval -= opt_genIntervalDecSteep;
 		}
-	
+
 		// Update is called once per frame
 		void Update () {
 			if((st_timer -= Time.deltaTime) < 0){
