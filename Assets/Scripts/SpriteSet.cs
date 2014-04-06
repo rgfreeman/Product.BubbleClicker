@@ -18,8 +18,8 @@ public class SpriteSet{
 
 	public void DestroySpriteSet(){
 		for(int index=0; index<textures.Length; index++){
-			Texture2D.Destroy(textures[index]);
 			Sprite.Destroy(sprites[index]);
+			Texture2D.Destroy(textures[index]);
 		}
 	}
 }

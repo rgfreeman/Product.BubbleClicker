@@ -6,8 +6,9 @@ public class CirclesController : MonoBehaviour {
 	////fields
 		////options
 		public bool  opt_active = false;     
-		public float opt_genInterval = 0.5f; //in seconds
-		public float opt_speedFactor = 4.5f;
+		public float opt_genInterval    = 0.5f; //in seconds
+		public float opt_minGenInterval = 0.2f; //in seconds
+		public float opt_speedFactor    = 4.5f;
 
 		////link to external objects
 		public GameObject ext_circlePrefub;
@@ -43,17 +44,14 @@ public class CirclesController : MonoBehaviour {
 				GameObject circle = (Instantiate(ext_circlePrefub) as GameObject);
 				circle.transform.parent = transform;
 
-				////stop decrease of speed factors 
-				if(opt_speedFactor<=0){opt_speedFactor=0;}
-
 				////set parameters to created circle 
 				circle.GetComponent<CircleController>().opt_screenRect   = cmp_screenRect;
 				circle.GetComponent<CircleController>().opt_speedFactor  = opt_speedFactor;
 				circle.GetComponent<CircleController>().ext_game         = ext_game;		 //need for inc score
 				circle.GetComponent<CircleController>().ext_assetManager = ext_assetManager; //need for choosing textures
 
-
-				////reset timer
+				////reset timer - check and stop decrease of gen interval 
+				opt_genInterval = (opt_genInterval<=opt_minGenInterval) ? opt_minGenInterval : opt_genInterval;
 				st_timer = opt_genInterval;
 			}
 		}

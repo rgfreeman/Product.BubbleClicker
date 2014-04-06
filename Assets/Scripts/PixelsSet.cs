@@ -13,4 +13,11 @@ public class PixelsSet{
 		new Color[128*128],
 		new Color[256*256],
 	};
+	public int[] sizes = new[]{
+		32,
+		64,
+		128,
+		256
+	};
+	public Color color;
 }

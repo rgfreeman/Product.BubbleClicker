@@ -9,7 +9,8 @@ public class CircleController : MonoBehaviour {
 		public float opt_maxScale = 1.0f;	//for 256 pixels sprite
 		public int   opt_minScore = 1;
 		public int   opt_maxScore = 3;
-
+		public float opt_minSpeed = 0.5f;
+		
 		public int   opt_baseSize = 256; //opt_maxScale equal opt_baseSize
 
 		public float opt_speedFactor;	 //set by "circles" object
@@ -51,7 +52,7 @@ public class CircleController : MonoBehaviour {
 			cmp_score = Mathf.RoundToInt(((scale - opt_minScale)/(opt_maxScale - opt_minScale)*(opt_minScore - opt_maxScore))) + opt_maxScore;
 
 			////scale to speed 
-			cmp_speed = (opt_maxScale-scale)*opt_speedFactor;
+			cmp_speed = (opt_maxScale-scale)*opt_speedFactor + opt_minSpeed;
 
 			////correction scale
 			scale = cmp_target_pixelSize/cmp_sprite_pixelSize;

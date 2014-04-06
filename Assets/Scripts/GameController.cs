@@ -5,8 +5,8 @@ public class GameController : MonoBehaviour {
 
 	////fields
 		public float opt_timeInTick           = 1.0f;  //1 tick = 1 second
-		public int   opt_ticksInLevel         = 10;    //1 level = 10 ticks
-		public float opt_speedFactorIncSteep  = 0.9f;
+		public int   opt_ticksInLevel         = 5;     //1 level = 5 ticks
+		public float opt_speedFactorIncSteep  = 0.1f;
 		public float opt_genIntervalDecSteep  = 0.002f;
 
 	////state
