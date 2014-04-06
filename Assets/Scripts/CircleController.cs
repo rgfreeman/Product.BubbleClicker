@@ -19,6 +19,7 @@ public class CircleController : MonoBehaviour {
 		private float cmp_speed;
 		private float cmp_radius;
 		private int   cmp_score;
+		private int   cmp_level;
 
 		////external elements
 		public GameObject ext_game;          //object with game controller bahaviour
@@ -38,11 +39,11 @@ public class CircleController : MonoBehaviour {
 			float spriteCollisionRadius;
 
 			////analog of mipmap
-			cmp_textureIndex = 0; cmp_sprite_pixelSize=32; spriteCollisionRadius=0.16f;
-			if(cmp_target_pixelSize>32) {cmp_textureIndex=1; cmp_sprite_pixelSize=64;  spriteCollisionRadius=0.32f;}
-			if(cmp_target_pixelSize>64) {cmp_textureIndex=2; cmp_sprite_pixelSize=128; spriteCollisionRadius=0.64f;}
-			if(cmp_target_pixelSize>128){cmp_textureIndex=3; cmp_sprite_pixelSize=256; spriteCollisionRadius=1.28f;}
-			
+			if(cmp_target_pixelSize>128){cmp_textureIndex=3; cmp_sprite_pixelSize=256; spriteCollisionRadius=1.28f;}else
+			if(cmp_target_pixelSize>64) {cmp_textureIndex=2; cmp_sprite_pixelSize=128; spriteCollisionRadius=0.64f;}else
+			if(cmp_target_pixelSize>32) {cmp_textureIndex=1; cmp_sprite_pixelSize=64;  spriteCollisionRadius=0.32f;}else
+										{cmp_textureIndex=0; cmp_sprite_pixelSize=32;  spriteCollisionRadius=0.16f;}
+
 			GetComponent<SpriteRenderer>().sprite = 
 			ext_assetManager.GetComponent<AssetManager>().getNewSprite(cmp_textureIndex);
 
@@ -66,12 +67,14 @@ public class CircleController : MonoBehaviour {
 				Random.Range(opt_screenRect.xMin + cmp_radius, opt_screenRect.xMax - cmp_radius),
 				opt_screenRect.yMax - cmp_radius
 			);
+
+			cmp_level = ext_game.GetComponent<GameController>().getLevel();
 		}
 		
 	
 		void OnMouseDown () {
 			this.ext_game.GetComponent<GameController>().incScore(this.cmp_score);
-			Destroy(this.gameObject);
+			DestroyCircle();
 		}
 
 
@@ -80,7 +83,12 @@ public class CircleController : MonoBehaviour {
 			
 			////destroy condition
 			if (transform.position.y - cmp_radius < opt_screenRect.yMin){
-				Destroy(this.gameObject);
+				DestroyCircle();
 			}
+		}
+
+		void DestroyCircle(){
+			ext_assetManager.GetComponent<AssetManager>().releaseSprite(cmp_level);
+			Destroy(this.gameObject);
 		}
 }

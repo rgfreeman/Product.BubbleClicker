@@ -49,8 +49,9 @@ public class GameController : MonoBehaviour {
 
 			////it's time to level up?
 			if((st_ticksToNextLevel-=tickCount)<=0){
+				st_level++;
 				////update textures
-				ext_assetManager.GetComponent<AssetManager>().updateTextures();
+				ext_assetManager.GetComponent<AssetManager>().updateTextures(st_level);
 				st_ticksToNextLevel = opt_ticksInLevel;
 			}
 
