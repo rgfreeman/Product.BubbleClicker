@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour {
 			ext_guiScore.GetComponent<GUIText>().text = "Score:" + st_score.ToString();
 		}
 
-		public void incTicks(int tickCount){
+		private void incTicks(int tickCount){
 			st_ticks+=tickCount;
 			ext_guiTime.GetComponent<GUIText>().text = "Time:" + st_ticks.ToString();
 

@@ -72,10 +72,6 @@ public class AssetManager : MonoBehaviour {
 		}
 	}
 
-	public void randomColor(){
-		////set random color
-		loc_genericPixelsSet.color=new Color(Random.Range(0.5f,1.0f), Random.Range(0.5f,1.0f), Random.Range(0.5f,1.0f));
-	}
 
 	////this method is called then level up
 	public void updateTextures(int currentLevel){
@@ -83,14 +79,14 @@ public class AssetManager : MonoBehaviour {
 		////save current level 
 		st_currentLevel = currentLevel;
 		st_nextLevel    = currentLevel+1;
-
+		
 		////remove ramaining empty set
 		if(loc_sets.ContainsKey(currentLevel-1)){
 			if (loc_sets[currentLevel-1].countLinks==0){
 				loc_sets.Remove(currentLevel-1);
 			}
 		}
-
+		
 		randomColor();
 		st_generating = "generating";
 		////this new thread fill loc_genericColorSet
@@ -98,8 +94,14 @@ public class AssetManager : MonoBehaviour {
 		thread.Start();
 	}
 
+
+	private void randomColor(){
+		////set random color
+		loc_genericPixelsSet.color=new Color(Random.Range(0.5f,1.0f), Random.Range(0.5f,1.0f), Random.Range(0.5f,1.0f));
+	}
+
 	////this method is called only at start
-	public void forceUpdateTextures(){
+	private void forceUpdateTextures(){
 		st_nextLevel = st_currentLevel;
 
 		randomColor();
@@ -108,7 +110,7 @@ public class AssetManager : MonoBehaviour {
 	}
 
 
-	public void onFinishUpdate(){
+	private void onFinishUpdate(){
 		////creat new set
 		Debug.Log(st_nextLevel);
 		loc_sets.Add(st_nextLevel, new SpriteSet());
@@ -134,13 +136,13 @@ public class AssetManager : MonoBehaviour {
 
 	////this method called in separate thread
 	//// method modify arrays of colors - loc_genericPixelsSet
-	public void genColorsInThread(){
+	private void genColorsInThread(){
 		genColor();
 		st_generating="ready";
 		Debug.Log("Set ready");
 	}
 
-	public void genColor(){
+	private void genColor(){
 		Color color = new Color();
 		for(int aindex=0; aindex<loc_genericPixelsSet.pixels.Length; aindex++){// 0..3
 			int height = loc_zeroLevelPixelsSet.sizes[aindex];
