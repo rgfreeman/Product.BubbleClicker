@@ -17,7 +17,7 @@ public class AssetManager : MonoBehaviour {
 		};
 
 		////state
-		private string st_generating = "indefined";
+		private string st_generating = "undefined";
 		private int    st_currentLevel = 0; //set in updateTextures method
 		private int    st_nextLevel    = 1; //set in updateTextures method
 
@@ -29,6 +29,8 @@ public class AssetManager : MonoBehaviour {
 
 		////dictionary sets of sprites <level, spriteSet>
 		private Dictionary<int, SpriteSet> loc_sets = new Dictionary<int, SpriteSet>();
+
+		private Thread thread;
 
 		////external
 		public GameObject ext_game;
@@ -88,10 +90,12 @@ public class AssetManager : MonoBehaviour {
 		}
 		
 		randomColor();
-		st_generating = "generating";
-		////this new thread fill loc_genericColorSet
-		Thread thread = new System.Threading.Thread(genColorsInThread);
-		thread.Start();
+		if(st_generating=="undefined"){//don't generate more then one set
+			st_generating = "generating";
+			////this new thread fill loc_genericColorSet
+			thread = new System.Threading.Thread(genColorsInThread);
+			thread.Start();
+		}
 	}
 
 
@@ -131,6 +135,7 @@ public class AssetManager : MonoBehaviour {
 				new Vector2(0.5f, 0.5f) //pivot point always on center
 			);
 		}
+		st_generating="undefined"; //ready for new generation
 	}
 
 
@@ -147,13 +152,13 @@ public class AssetManager : MonoBehaviour {
 		for(int aindex=0; aindex<loc_genericPixelsSet.pixels.Length; aindex++){// 0..3
 			int height = loc_zeroLevelPixelsSet.sizes[aindex];
 			int pixel_counter = 0;
-			int line = 0;
+			float line = 0;
 			for (int cindex=0; cindex<loc_genericPixelsSet.pixels[aindex].Length; cindex++){
 				if(pixel_counter++==height){pixel_counter=0; line++;}
 				color = loc_zeroLevelPixelsSet.pixels[aindex][cindex]; //get color with alpha
-				color.r = loc_genericPixelsSet.color.r * ((float)line)/height;
-				color.g = loc_genericPixelsSet.color.g * ((float)line)/height;
-				color.b = loc_genericPixelsSet.color.b * ((float)line)/height;
+				color.r = loc_genericPixelsSet.color.r * line/height;
+				color.g = loc_genericPixelsSet.color.g * line/height;
+				color.b = loc_genericPixelsSet.color.b * line/height;
 				loc_genericPixelsSet.pixels[aindex][cindex] = color;
 			}
 		}
@@ -162,10 +167,15 @@ public class AssetManager : MonoBehaviour {
 
 	void Update () {
 		if(st_generating=="ready"){
-			st_generating="undefined";
 			onFinishUpdate();
 		}
 		////update GUI
 		ext_guiSets.GetComponent<GUIText>().text = "Sets in memory:"+loc_sets.Count.ToString(); 
+	}
+
+	void OnApplicationQuit(){
+		////stop main thread and wait termination of thread for generation
+		thread.Join();
+		Debug.Log("Thread for generation is terminated");
 	}
 }
